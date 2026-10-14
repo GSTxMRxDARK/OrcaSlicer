@@ -688,6 +688,7 @@ public:
     void            install_local_plugin();
     void            open_terminal_dialog();
     void            open_speed_dial();
+    void            open_smart_print();
     ActionRegistry& action_registry() { return m_action_registry; }
     void            open_exportpresetbundledialog(size_t open_on_tab = 0, const std::string& highlight_option = std::string());
     virtual bool OnExceptionInMainLoop() override;

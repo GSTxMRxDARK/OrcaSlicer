@@ -1,0 +1,24 @@
+name: Smart Print Windows build
+
+# Builds the Windows installer and portable zip of this fork on GitHub's runners, without the Linux,
+# macOS and ARM builds of build_all.yml. The first run also builds the dependencies (about two hours);
+# later runs reuse them from the cache. The installer appears under the run's Artifacts.
+on:
+  push:
+    branches:
+      - smartprint
+  workflow_dispatch:
+
+concurrency:
+  group: smartprint-windows-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build_windows:
+    name: Build Windows x64
+    uses: ./.github/workflows/build_check_cache.yml
+    with:
+      os: windows-latest
+      arch: x64
+      compiler: clang
+    secrets: inherit

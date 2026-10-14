@@ -3527,6 +3527,10 @@ void MainFrame::init_menubar_as_editor()
         top_menu, Shortcut::SpeedDial, false, _L("Open Speed Dial"), "",
         [](wxCommandEvent &) { wxGetApp().open_speed_dial(); },
         "", nullptr, []() { return true; }, this);
+    append_menu_item(
+        top_menu, wxID_ANY, _L("Smart Print assistant") + dots, _L("Pick material and settings for what the part is used for, and simulate it"),
+        [](wxCommandEvent &) { wxGetApp().open_smart_print(); },
+        "", nullptr, [this]() { return m_plater && !m_plater->model().objects.empty(); }, this);
     top_menu->AppendSeparator();
 
     append_menu_item(
@@ -3634,6 +3638,10 @@ void MainFrame::init_menubar_as_editor()
         fileMenu, Shortcut::SpeedDial, false, _L("Open Speed Dial"), "",
         [](wxCommandEvent&) { wxGetApp().open_speed_dial(); },
         "", nullptr, []() { return true; }, this);
+    append_menu_item(
+        fileMenu, wxID_ANY, _L("Smart Print assistant") + dots, _L("Pick material and settings for what the part is used for, and simulate it"),
+        [](wxCommandEvent&) { wxGetApp().open_smart_print(); },
+        "", nullptr, [this]() { return m_plater && !m_plater->model().objects.empty(); }, this);
     append_menu_item(
         fileMenu, wxID_ANY, _L("Preset Bundle"), "",
         [this](wxCommandEvent&) {

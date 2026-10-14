@@ -127,6 +127,10 @@ set(SLIC3R_GUI_SOURCES
     GUI/Shortcuts.hpp
     GUI/SpeedDialDialog.cpp
     GUI/SpeedDialDialog.hpp
+    GUI/SmartPrintDialog.cpp
+    GUI/SmartPrintDialog.hpp
+    GUI/SmartPrintStrings.cpp
+    GUI/SmartPrintStrings.hpp
     GUI/ActionRegistry.cpp
     GUI/ActionRegistry.hpp
     GUI/NativeCommands.cpp

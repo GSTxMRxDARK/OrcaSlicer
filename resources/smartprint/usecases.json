@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "about": "What each use case needs from a material and how strong/light its three options should be. 'analysis': 'drone' runs the drone load model, 'custom' lets the user place supports and forces, 'none' uses the rule-based tiers. 'material_weights' rank the user's filaments (features are normalized across them). 'safety_targets' are the minimum safety factors of the Light / Balanced / Strong options under the main load case.",
+  "environments": [
+    {"id": "indoor", "max_temp": 35, "uv": false},
+    {"id": "outdoor", "max_temp": 50, "uv": true},
+    {"id": "car", "max_temp": 80, "uv": true},
+    {"id": "electronics", "max_temp": 60, "uv": false},
+    {"id": "engine", "max_temp": 110, "uv": false}
+  ],
+  "use_cases": [
+    {
+      "id": "drone_frame",
+      "analysis": "drone",
+      "default_environment": "outdoor",
+      "pattern": "gyroid",
+      "material_weights": {"stiffness_per_weight": 0.35, "strength_per_weight": 0.25, "impact": 0.2, "fatigue": 0.15, "layer_strength": 0.05},
+      "safety_targets": {"light": 1.5, "balanced": 2.5, "strong": 4.0},
+      "styles": [
+        {"id": "cruise", "dynamic_factor": 1.25, "landing_g": 4, "crash_g": 5},
+        {"id": "freestyle", "dynamic_factor": 1.5, "landing_g": 8, "crash_g": 10},
+        {"id": "racing", "dynamic_factor": 1.5, "landing_g": 8, "crash_g": 15},
+        {"id": "heavy_lift", "dynamic_factor": 1.3, "landing_g": 3, "crash_g": 4}
+      ],
+      "tips": ["print_flat", "fibre_filled", "dry_filament", "more_walls_than_infill"]
+    },
+    {
+      "id": "rc_plane",
+      "analysis": "none",
+      "default_environment": "outdoor",
+      "pattern": "gyroid",
+      "material_weights": {"stiffness_per_weight": 0.35, "light": 0.3, "strength_per_weight": 0.15, "impact": 0.2},
+      "tiers": {
+        "light": {"walls": 1, "infill": 0.0, "top": 2, "bottom": 2},
+        "balanced": {"walls": 1, "infill": 0.05, "top": 3, "bottom": 3},
+        "strong": {"walls": 2, "infill": 0.10, "top": 3, "bottom": 3}
+      },
+      "tips": ["lw_pla", "vase_mode", "reinforce_spar"]
+    },
+    {
+      "id": "bracket",
+      "analysis": "custom",
+      "default_environment": "indoor",
+      "pattern": "cubic",
+      "material_weights": {"strength_per_weight": 0.25, "stiffness_per_weight": 0.2, "layer_strength": 0.2, "creep": 0.2, "impact": 0.15},
+      "safety_targets": {"light": 2.0, "balanced": 3.0, "strong": 5.0},
+      "tips": ["orient_layers", "more_walls_than_infill", "avoid_pla_constant_load"]
+    },
+    {
+      "id": "jig",
+      "analysis": "custom",
+      "default_environment": "indoor",
+      "pattern": "cubic",
+      "material_weights": {"stiffness_per_weight": 0.35, "strength_per_weight": 0.2, "creep": 0.2, "ease": 0.25},
+      "safety_targets": {"light": 2.0, "balanced": 3.0, "strong": 5.0},
+      "tips": ["orient_layers", "more_walls_than_infill"]
+    },
+    {
+      "id": "enclosure",
+      "analysis": "none",
+      "default_environment": "electronics",
+      "pattern": "grid",
+      "material_weights": {"ease": 0.35, "heat": 0.25, "impact": 0.2, "strength_per_weight": 0.2},
+      "tiers": {
+        "light": {"walls": 2, "infill": 0.10, "top": 4, "bottom": 4},
+        "balanced": {"walls": 3, "infill": 0.15, "top": 5, "bottom": 5},
+        "strong": {"walls": 4, "infill": 0.25, "top": 6, "bottom": 6}
+      },
+      "tips": ["heat_inserts", "vents"]
+    },
+    {
+      "id": "gear",
+      "analysis": "none",
+      "default_environment": "indoor",
+      "pattern": "gyroid",
+      "material_weights": {"fatigue": 0.3, "strength_per_weight": 0.25, "impact": 0.2, "creep": 0.15, "layer_strength": 0.1},
+      "tiers": {
+        "light": {"walls": 3, "infill": 0.30, "top": 5, "bottom": 5},
+        "balanced": {"walls": 4, "infill": 0.50, "top": 6, "bottom": 6},
+        "strong": {"walls": 6, "infill": 0.80, "top": 8, "bottom": 8}
+      },
+      "tips": ["nylon_gears", "print_teeth_flat"]
+    },
+    {
+      "id": "flexible",
+      "analysis": "none",
+      "requires_flexible": true,
+      "default_environment": "outdoor",
+      "pattern": "gyroid",
+      "material_weights": {"impact": 0.4, "fatigue": 0.4, "ease": 0.2},
+      "tiers": {
+        "light": {"walls": 2, "infill": 0.10, "top": 3, "bottom": 3},
+        "balanced": {"walls": 3, "infill": 0.20, "top": 4, "bottom": 4},
+        "strong": {"walls": 4, "infill": 0.40, "top": 5, "bottom": 5}
+      },
+      "tips": ["tpu_slow"]
+    },
+    {
+      "id": "decor",
+      "analysis": "none",
+      "default_environment": "indoor",
+      "pattern": "lightning",
+      "material_weights": {"ease": 0.7, "light": 0.3},
+      "tiers": {
+        "light": {"walls": 2, "infill": 0.05, "top": 3, "bottom": 3},
+        "balanced": {"walls": 2, "infill": 0.10, "top": 4, "bottom": 3},
+        "strong": {"walls": 3, "infill": 0.15, "pattern": "gyroid", "top": 5, "bottom": 4}
+      },
+      "tips": ["lightning_infill"]
+    }
+  ]
+}

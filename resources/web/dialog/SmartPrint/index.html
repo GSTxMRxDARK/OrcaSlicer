@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smart Print assistant</title>
+  <!-- theme.css only: the host-injected palette and semantic colours. common.css is left out on
+       purpose; it caps the page at 820x660 and resets every control. -->
+  <link rel="stylesheet" type="text/css" href="../css/theme.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="title">
+        <h1 data-i18n="sp_title">Smart Print assistant</h1>
+        <span id="objectName" class="object-name"></span>
+      </div>
+      <div class="segmented" role="radiogroup" aria-label="Simulation detail" data-i18n-aria-label="sp_quality_label">
+        <button type="button" class="seg is-on" data-quality="fast" role="radio" aria-checked="true" data-i18n="sp_quality_fast">Fast</button>
+        <button type="button" class="seg" data-quality="detailed" role="radio" aria-checked="false" data-i18n="sp_quality_detailed">Detailed</button>
+      </div>
+    </header>
+
+    <aside class="panel thin-scroll" id="panel">
+      <section class="step" id="stepUse">
+        <h2><span class="num">1</span><span data-i18n="sp_step_use">What is this part for?</span></h2>
+        <div class="use-grid" id="useCases" role="radiogroup"></div>
+      </section>
+
+      <section class="step" id="stepWhere" hidden>
+        <h2><span class="num">2</span><span data-i18n="sp_step_where">Where will it be used?</span></h2>
+        <div class="chips" id="environments" role="radiogroup"></div>
+        <label class="field-row">
+          <span data-i18n="sp_impact">Knocks and crashes</span>
+          <select id="impact">
+            <option value="0" data-i18n="sp_impact_none">Hardly ever</option>
+            <option value="1" data-i18n="sp_impact_some">Sometimes</option>
+            <option value="2" data-i18n="sp_impact_often">Often (drops, crashes)</option>
+          </select>
+        </label>
+        <div class="printer-row">
+          <label class="check"><input type="checkbox" id="hardened"> <span data-i18n="sp_hardened">Hardened nozzle</span></label>
+          <label class="check"><input type="checkbox" id="enclosure"> <span data-i18n="sp_enclosure">Enclosed printer</span></label>
+        </div>
+      </section>
+
+      <section class="step" id="stepMaterial" hidden>
+        <h2><span class="num">3</span><span data-i18n="sp_step_material">Material you have</span></h2>
+        <p class="hint" data-i18n="sp_material_hint">Your filament presets, best match first. Pick the one you want to print with.</p>
+        <div class="materials" id="materials" role="radiogroup"></div>
+      </section>
+
+      <section class="step" id="stepPower" hidden>
+        <h2><span class="num">4</span><span data-i18n="sp_step_power">Motors, props and battery</span></h2>
+        <div class="form-grid">
+          <label><span data-i18n="sp_motor">Motor</span><select id="motor"></select></label>
+          <label><span data-i18n="sp_prop">Propeller</span><select id="prop"></select></label>
+          <label><span data-i18n="sp_battery">Battery</span><select id="battery"></select></label>
+          <label><span data-i18n="sp_motor_count">Motors</span>
+            <select id="motorCount"><option>3</option><option selected>4</option><option>6</option><option>8</option></select></label>
+          <label><span data-i18n="sp_payload">Other weight (g)</span><input type="number" id="payload" min="0" step="10" value="250"></label>
+          <label><span data-i18n="sp_style">Flying style</span>
+            <select id="style">
+              <option value="cruise" data-i18n="sp_style_cruise">Cruising / cinematic</option>
+              <option value="freestyle" selected data-i18n="sp_style_freestyle">Freestyle</option>
+              <option value="racing" data-i18n="sp_style_racing">Racing</option>
+              <option value="heavy_lift" data-i18n="sp_style_heavy">Heavy lift</option>
+            </select></label>
+        </div>
+        <details class="more">
+          <summary data-i18n="sp_more_power">Measured thrust and your own parts</summary>
+          <label class="field-row"><span data-i18n="sp_measured">Measured full-throttle thrust per motor (g)</span>
+            <input type="number" id="measured" min="0" step="50" placeholder="—"></label>
+          <div class="add-own">
+            <button type="button" class="link-btn" data-add="motors" data-i18n="sp_add_motor">Add my motor</button>
+            <button type="button" class="link-btn" data-add="props" data-i18n="sp_add_prop">Add my propeller</button>
+            <button type="button" class="link-btn" data-add="batteries" data-i18n="sp_add_battery">Add my battery</button>
+          </div>
+          <form class="own-form" id="ownForm" hidden></form>
+        </details>
+        <div class="power" id="power"></div>
+        <p class="hint" data-i18n="sp_motor_hint">Motor mounts were found automatically. Click a numbered marker, then click the model to move it.</p>
+      </section>
+
+      <section class="step" id="stepLoads" hidden>
+        <h2><span class="num">4</span><span data-i18n="sp_step_loads">How it is held and loaded</span></h2>
+        <p class="hint" data-i18n="sp_loads_hint">Mark where the part is fixed (screws, clamps) and where force pushes on it, then click on the model.</p>
+        <div class="tools">
+          <button type="button" class="tool" data-tool="support" data-i18n="sp_add_support">Add support</button>
+          <button type="button" class="tool" data-tool="force" data-i18n="sp_add_force">Add force</button>
+        </div>
+        <ul class="load-list" id="loadList"></ul>
+      </section>
+
+      <section class="step" id="stepOptions" hidden>
+        <h2><span class="num" id="optionsNum">5</span><span data-i18n="sp_step_options">Choose how light or strong</span></h2>
+        <button type="button" class="primary wide" id="findBtn" data-i18n="sp_find">Find the best settings</button>
+        <div class="tiers" id="tiers"></div>
+        <div class="expect" id="expect"></div>
+      </section>
+    </aside>
+
+    <main class="stage">
+      <div class="viewer" id="viewer"></div>
+      <div class="case-tabs" id="caseTabs" role="tablist"></div>
+      <div class="legend" id="legend" hidden>
+        <div class="legend-title" data-i18n="sp_legend">Safety factor</div>
+        <div class="legend-bar"></div>
+        <div class="legend-scale"><span>&lt;1</span><span>1.5</span><span>2.5</span><span>4+</span></div>
+        <div class="legend-words"><span data-i18n="sp_breaks">breaks</span><span data-i18n="sp_safe">safe</span></div>
+      </div>
+      <div class="callout" id="callout" hidden></div>
+      <div class="empty" id="viewerEmpty" data-i18n="sp_pick_use">Pick what the part is for to start.</div>
+    </main>
+
+    <footer class="statusbar">
+      <div class="status" id="status" role="status" aria-live="polite"></div>
+      <div class="progress" id="progress" hidden><div class="progress-fill" id="progressFill"></div></div>
+      <div class="actions">
+        <button type="button" class="ButtonStyleRegular" id="closeBtn" data-i18n="sp_close">Close</button>
+        <button type="button" class="primary" id="applyBtn" disabled data-i18n="sp_apply">Apply to object</button>
+      </div>
+    </footer>
+  </div>
+
+  <script src="../../include/i18n.js"></script>
+  <script src="../../include/three/three.min.js"></script>
+  <script src="strings.js"></script>
+  <script src="viewer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

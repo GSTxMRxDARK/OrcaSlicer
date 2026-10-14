@@ -239,6 +239,7 @@
 
 #include "PluginsDialog.hpp"
 #include "SpeedDialDialog.hpp"
+#include "SmartPrintDialog.hpp"
 #include "TerminalDialog.hpp"
 #include "libslic3r/Format/STEP.hpp"
 #include "libslic3r/Semver.hpp"
@@ -8739,6 +8740,16 @@ void GUI_App::open_speed_dial()
         });
     }
     m_speed_dial_dialog->request_show();
+}
+
+void GUI_App::open_smart_print()
+{
+    if (!mainframe)
+        return;
+    SmartPrintDialog dlg(mainframe);
+    dlg.ShowModal();
+    if (plater_ != nullptr && plater_->get_current_canvas3D() != nullptr)
+        plater_->get_current_canvas3D()->force_set_focus();
 }
 
 void GUI_App::open_exportpresetbundledialog(size_t open_on_tab, const std::string& highlight_option)

@@ -1667,6 +1667,7 @@ void MenuFactory::create_extra_object_menu()
     append_menu_item_fix_through_cgal(&m_object_menu);
     // Object Simplify
     append_menu_item_simplify(&m_object_menu);
+    append_menu_item_smart_print(&m_object_menu);
     // Object Mesh Subdivision
     append_menu_item_smooth_mesh(&m_object_menu);
     // merge to single part
@@ -2304,6 +2305,13 @@ void MenuFactory::append_menu_item_simplify(wxMenu* menu)
     wxMenuItem* menu_item = append_menu_item(menu, wxID_ANY, _L("Simplify Model"), "",
         [](wxCommandEvent&) { obj_list()->simplify(); }, "", menu,
         []() {return plater()->can_simplify(); }, m_parent);
+}
+
+void MenuFactory::append_menu_item_smart_print(wxMenu* menu)
+{
+    append_menu_item(menu, wxID_ANY, _L("Smart Print assistant") + dots, _L("Pick material and settings for what the part is used for, and simulate it"),
+        [](wxCommandEvent&) { wxGetApp().open_smart_print(); }, "", menu,
+        []() { return plater()->is_single_full_object_selection(); }, m_parent);
 }
 
 void MenuFactory::append_menu_item_smooth_mesh(wxMenu *menu)

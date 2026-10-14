@@ -154,6 +154,18 @@ set(lisbslic3r_sources
     FileParserError.hpp
     Fill/Fill3DHoneycomb.cpp
     Fill/Fill3DHoneycomb.hpp
+    SmartPrint/Advisor.cpp
+    SmartPrint/Advisor.hpp
+    SmartPrint/Materials.cpp
+    SmartPrint/Materials.hpp
+    SmartPrint/PrintStructure.cpp
+    SmartPrint/PrintStructure.hpp
+    SmartPrint/Propulsion.cpp
+    SmartPrint/Propulsion.hpp
+    SmartPrint/Session.cpp
+    SmartPrint/Session.hpp
+    SmartPrint/StructuralModel.cpp
+    SmartPrint/StructuralModel.hpp
     Fill/FillAdaptive.cpp
     Fill/FillAdaptive.hpp
     Fill/FillBase.cpp
