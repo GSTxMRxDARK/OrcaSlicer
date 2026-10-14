@@ -444,6 +444,15 @@ jobs:
             choco install nsis --yes --no-progress
             Write-Host "::endgroup::"
           }
+          # Fallbacks when the Chocolatey feed is down: winget, then the official installer.
+          if (-not (Test-Path $makensis) -and (Get-Command winget -ErrorAction SilentlyContinue)) {
+            winget install --id NSIS.NSIS --exact --silent --accept-source-agreements --accept-package-agreements
+          }
+          if (-not (Test-Path $makensis)) {
+            $setup = Join-Path $env:RUNNER_TEMP 'nsis-setup.exe'
+            Invoke-WebRequest -Uri 'https://downloads.sourceforge.net/project/nsis/NSIS%203/3.10/nsis-3.10-setup.exe' -OutFile $setup -UserAgent 'Wget'
+            Start-Process -FilePath $setup -ArgumentList '/S' -Wait
+          }
           if (-not (Test-Path $makensis)) {
             throw "NSIS install failed: $makensis not found after 3 attempts."
           }
